@@ -8,7 +8,6 @@ import "./ListMapView.css"
 import Spinner from 'react-bootstrap/Spinner';
 import {useNavigate, useParams} from "react-router-dom";
 import map from "./map.json";
-import useGeolocation from "../../component/Geolocation";
 
 export default function ListMapView() {
     // const [data, setData] = useState([null]);
@@ -92,20 +91,6 @@ export default function ListMapView() {
     //     .catch(error => {
     //         console.error('Error:', error);
     //     });
-
-
-    const location = useGeolocation();
-
-    if (!location.loaded) {
-        return <p>Loading...</p>;
-    }
-
-    if (location.error) {
-        return <p>Error: {location.error.message}</p>;
-    }
-
-    console.log(location.coordinates.lat, location.coordinates.lng)
-
 
     return (
         <>
