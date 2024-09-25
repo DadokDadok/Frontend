@@ -92,6 +92,7 @@ export default function ListMapView() {
     //         console.error('Error:', error);
     //     });
 
+
     return (
         <>
             <div className="wrapper">
