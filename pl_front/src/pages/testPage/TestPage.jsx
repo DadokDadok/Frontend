@@ -49,7 +49,7 @@ export default function TestPage() {
                     onChange={handleChange}
                     placeholder="Enter something"
                 />
-                <button onClick={handleSubmit}>Submit</button>
+                {/*<button onClick={handleSubmit}>Submit</button>*/}
                 <div>
                     <h2>서버 Post 응답:</h2>
                     <p>{responseMessage}</p>
