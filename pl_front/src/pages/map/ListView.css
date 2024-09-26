@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+@font-face {
+    font-family: 'GmarketSansMedium';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'JalnanGothic';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/JalnanGothic.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.background{
+    /*background-color: #f3f4f6;*/
+}
+
+
+.list-detail {
+    flex: 1;
+    padding-top: 1rem;
+    /*background-color: #f3f4f6;*/
+}
+
+.location {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-left: 0.5rem;
+}
+
+.location-num-wrap {
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    text-align: center;
+    z-index: 1;
+}
+
+
+.location-num {
+    color: white;
+    padding-top: 0.3rem;
+}
+
+/*.day-num {*/
+/*    font-family: 'JalnanGothic';*/
+/*    font-width: bold;*/
+/*}*/
+
+.location-info {
+    padding-left: 1rem;
+}
+
+
+.location-info .title {
+    /*font-family: 'JalnanGothic';*/
+    margin: 5px 0 0 0;
+}
+
+.location-info .addr {
+    /*font-family: 'GmarketSansMedium';*/
+    margin: 0;
+    font-size: 80%;
+    color: #808080;
+}
+
+.location-img-wrap {
+    text-align: center;
+    padding-left: 1rem;
+    display: table;
+    width: 5.5rem;
+    height: 5.5rem;
+    /*background-color: #f8f8f8;*/
+    border-radius: 70%;
+}
+
+.location-img-div {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.location-img {
+    width: 5.5rem;
+    height: 5.5rem;
+    border-radius: 70%;
+}
+
+.location-num-wrap {
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    text-align: center;
+    z-index: 1;
+}
+
+.color-first {
+    background-color: #A6285F; /* type이 도서관일 경우 배경색 */
+}
+
+.color-second {
+    background-color: #227c9d; /* type이 문화공간일 경우 배경색 */
+}
+
+.color-third {
+    background-color: #9C8770; /* type이 서점일 경우 배경색 */
+}
+
+.location-num {
+    color: white;
+    padding-top: 0.1rem;
+}
+
+/*스크롤바*/
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+}
+
+/*.custom-link {*/
+/*    color: #808080; !* 원하는 색상으로 변경 *!*/
+/*    text-decoration: none; !* 텍스트에 밑줄 제거 *!*/
+/*    font-family: 'GmarketSansMedium';*/
+/*}*/
+
+.badge{
+    display: inline-block;
+    padding: 0.25em 0.5em;
+    font-size: 75%;
+    font-weight: bold;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    background-color: #007bff;
+    color: #fff;
+}
