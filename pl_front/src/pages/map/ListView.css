@@ -68,6 +68,13 @@
     color: #808080;
 }
 
+.location-info .tag {
+    /*font-family: 'GmarketSansMedium';*/
+    margin: 0;
+    font-size: 80%;
+    color: #808080;
+}
+
 .location-img-wrap {
     text-align: center;
     padding-left: 1rem;

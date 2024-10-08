@@ -1,7 +1,7 @@
 import React from "react";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import TestPage from "./pages/testPage/TestPage";
-import ListMapView from "./pages/map/ListMapView";
+import TestPage from "./pages/testPage/TestPage.jsx";
+import ListMapView from "./pages/map/ListMapView.jsx";
 
 function App() {
   return (
