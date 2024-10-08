@@ -66,8 +66,6 @@ export default function ListMapView() {
             id: item.id,
             name: item.name,
             type: item.type,
-            cityDo: item.city_do,
-            siGunGu: item.si_gun_gu,
             address: item.address,
             tel: item.tel,
             latitude: item.latitude,
