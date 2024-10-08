@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Button, OverlayTrigger, Popover} from 'react-bootstrap';
 
 const region = {
@@ -18,13 +18,13 @@ const region = {
     "충청북도": ["괴산군", "단양군", "보은군", "영동군", "옥천군", "음성군", "제천시", "증평군", "진천군", "청주시", "충주시"]
 };
 
-const RegionDropdown = ({ onSelect }) => {
+
+const RegionDropdown = ({onSelect, onlat, onlng}) => {
     const [selectedCityDo, setSelectedCityDo] = useState('');
     const [selectedSiGunGu, setSelectedSiGunGu] = useState('');
     const [showPopover, setShowPopover] = useState(false);
-    const [isConfirmed, setIsConfirmed] = useState(false);
-    const [confirmedCityDo, setConfirmedCityDo] = useState(''); // 확정된 시/도
-    const [confirmedSiGunGu, setConfirmedSiGunGu] = useState(''); // 확정된 시군구
+    const [confirmedCityDo, setConfirmedCityDo] = useState('');
+    const [confirmedSiGunGu, setConfirmedSiGunGu] = useState('');
 
     const handleCityDoSelect = (cityDo) => {
         setSelectedCityDo(cityDo);
@@ -36,25 +36,25 @@ const RegionDropdown = ({ onSelect }) => {
     };
 
     const handleConfirmSelection = () => {
-        if (selectedCityDo && selectedSiGunGu) {
+        if (selectedCityDo) {
             setConfirmedCityDo(selectedCityDo);
-            setConfirmedSiGunGu(selectedSiGunGu);
-            onSelect(selectedCityDo, selectedSiGunGu);
+            setConfirmedSiGunGu(selectedSiGunGu); // 시군구가 선택되지 않았더라도 기본값 유지
+            onSelect(selectedCityDo, selectedSiGunGu); // 시군구가 선택되지 않은 경우 빈 문자열로 전달
         }
     };
 
     const handleTogglePopover = () => {
-        setShowPopover((prev) => !prev); // 팝오버 열기/닫기
+        setShowPopover((prev) => !prev);
     };
 
     const handleClosePopover = () => {
-        setShowPopover(false); // 팝오버 닫기
+        setShowPopover(false);
     };
 
     const popoverContent = (
-        <Popover id="popover-regions" style={{ width: '400px' }}>
-            <Popover.Body style={{ display: 'flex', flexDirection: 'column' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Popover id="popover-regions" style={{width: '400px'}}>
+            <Popover.Body style={{display: 'flex', flexDirection: 'column'}}>
+                <div style={{display: 'flex', justifyContent: 'space-between'}}>
                     <div style={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -107,17 +107,17 @@ const RegionDropdown = ({ onSelect }) => {
                         ))}
                     </div>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                     <Button
                         onClick={handleConfirmSelection}
-                        disabled={!selectedCityDo || !selectedSiGunGu}
-                        style={{ marginTop: '1rem', alignSelf: 'center' }}
+                        disabled={!selectedCityDo} // 시도만 선택되어 있으면 활성화
+                        style={{marginTop: '1rem', alignSelf: 'center'}}
                     >
                         선택 완료
                     </Button>
                     <Button
                         onClick={handleClosePopover}
-                        style={{ marginTop: '1rem', alignSelf: 'center' }}
+                        style={{marginTop: '1rem', alignSelf: 'center'}}
                     >
                         닫기
                     </Button>
@@ -136,7 +136,9 @@ const RegionDropdown = ({ onSelect }) => {
                 show={showPopover}
                 onToggle={handleTogglePopover}
             >
-                <button className="btn btn-primary">지역 선택 {confirmedCityDo && `: ${confirmedCityDo} ${confirmedSiGunGu}`}</button>
+                <button className="btn btn-primary">
+                    지역 선택
+                </button>
             </OverlayTrigger>
         </div>
     );

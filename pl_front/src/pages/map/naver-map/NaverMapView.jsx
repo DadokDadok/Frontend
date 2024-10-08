@@ -1,7 +1,7 @@
 import React from 'react';
 import NaverMap from "./NaverMap";
 
-function NaverMapView({data}) {
+function NaverMapView({data, myLat, myLng}) {
 
     const markerGroups = [];
 
@@ -24,7 +24,7 @@ function NaverMapView({data}) {
             longitude: item.longitude,
             homepage: item.homepage,
             closed: item.closed,
-            operatingTime: item.operatingTime,
+            open: item.open,
             description: item.description,
             img: item.img,
             tag: item.tag,
@@ -42,7 +42,7 @@ function NaverMapView({data}) {
 
     const center = {latitude: centerLatitude, longitude: centerLongitude};
 
-    return <NaverMap markers={markerGroups} center={center}/>;
+    return <NaverMap markers={markerGroups} center={center} myLat={myLat} myLng={myLng}/>;
 
 }
 
