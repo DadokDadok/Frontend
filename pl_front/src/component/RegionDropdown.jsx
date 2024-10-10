@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {Button, OverlayTrigger, Popover} from 'react-bootstrap';
 
 const region = {
@@ -19,12 +19,10 @@ const region = {
 };
 
 
-const RegionDropdown = ({onSelect, onlat, onlng}) => {
+const RegionDropdown = ({onSelect}) => {
     const [selectedCityDo, setSelectedCityDo] = useState('');
     const [selectedSiGunGu, setSelectedSiGunGu] = useState('');
     const [showPopover, setShowPopover] = useState(false);
-    const [confirmedCityDo, setConfirmedCityDo] = useState('');
-    const [confirmedSiGunGu, setConfirmedSiGunGu] = useState('');
 
     const handleCityDoSelect = (cityDo) => {
         setSelectedCityDo(cityDo);
@@ -37,8 +35,6 @@ const RegionDropdown = ({onSelect, onlat, onlng}) => {
 
     const handleConfirmSelection = () => {
         if (selectedCityDo) {
-            setConfirmedCityDo(selectedCityDo);
-            setConfirmedSiGunGu(selectedSiGunGu); // 시군구가 선택되지 않았더라도 기본값 유지
             onSelect(selectedCityDo, selectedSiGunGu); // 시군구가 선택되지 않은 경우 빈 문자열로 전달
         }
     };
@@ -70,7 +66,7 @@ const RegionDropdown = ({onSelect, onlat, onlng}) => {
                                 onClick={() => handleCityDoSelect(cityDo)}
                                 style={{
                                     margin: '0.3rem',
-                                    background: selectedCityDo === cityDo ? '#007bff' : '#fff',
+                                    background: selectedCityDo === cityDo ? '#335061' : '#fff',
                                     color: selectedCityDo === cityDo ? '#fff' : '#000',
                                     border: 'none',
                                     borderBottom: '1px solid #bdcdd6',
@@ -95,7 +91,7 @@ const RegionDropdown = ({onSelect, onlat, onlng}) => {
                                 onClick={() => handleSiGunGuSelect(siGunGu)}
                                 style={{
                                     margin: '0.3rem',
-                                    background: selectedSiGunGu === siGunGu ? '#007bff' : '#fff',
+                                    background: selectedSiGunGu === siGunGu ? '#335061' : '#fff',
                                     color: selectedSiGunGu === siGunGu ? '#fff' : '#000',
                                     border: 'none',
                                     borderBottom: '1px solid #bdcdd6',
@@ -111,13 +107,13 @@ const RegionDropdown = ({onSelect, onlat, onlng}) => {
                     <Button
                         onClick={handleConfirmSelection}
                         disabled={!selectedCityDo} // 시도만 선택되어 있으면 활성화
-                        style={{marginTop: '1rem', alignSelf: 'center'}}
+                        style={{marginTop: '1rem', alignSelf: 'center', backgroundColor: '#335061'}}
                     >
                         선택 완료
                     </Button>
                     <Button
                         onClick={handleClosePopover}
-                        style={{marginTop: '1rem', alignSelf: 'center'}}
+                        style={{marginTop: '1rem', alignSelf: 'center', backgroundColor: '#335061'}}
                     >
                         닫기
                     </Button>
@@ -136,7 +132,7 @@ const RegionDropdown = ({onSelect, onlat, onlng}) => {
                 show={showPopover}
                 onToggle={handleTogglePopover}
             >
-                <button className="btn btn-primary">
+                <button className="btn btn-primary" style={{backgroundColor: '#335061'}}>
                     지역 선택
                 </button>
             </OverlayTrigger>

@@ -39,7 +39,7 @@ const TypeDropdown = ({ onTypeSelect }) => {
                             onClick={() => handleTypeSelect(type)}
                             style={{
                                 margin: '0.3rem',
-                                background: selectedType === type ? '#007bff' : '#fff',
+                                background: selectedType === type ? '#335061' : '#fff',
                                 color: selectedType === type ? '#fff' : '#000',
                                 border: 'none',
                                 borderBottom: '1px solid #bdcdd6',
@@ -54,13 +54,13 @@ const TypeDropdown = ({ onTypeSelect }) => {
                     <Button
                         onClick={handleConfirmSelection}
                         disabled={!selectedType} // 타입이 선택되어야 활성화
-                        style={{ marginTop: '1rem', alignSelf: 'center' }}
+                        style={{ marginTop: '1rem', alignSelf: 'center', backgroundColor: '#335061' }}
                     >
                         선택 완료
                     </Button>
                     <Button
                         onClick={handleClosePopover}
-                        style={{ marginTop: '1rem', alignSelf: 'center' }}
+                        style={{ marginTop: '1rem', alignSelf: 'center', backgroundColor: '#335061' }}
                     >
                         닫기
                     </Button>
@@ -79,7 +79,7 @@ const TypeDropdown = ({ onTypeSelect }) => {
                 show={showPopover}
                 onToggle={handleTogglePopover}
             >
-                <button className="btn btn-primary">타입 선택 {selectedType && `: ${selectedType}`}</button>
+                <button className="btn btn-primary" style={{backgroundColor: '#335061'}}>타입 선택 {selectedType && `: ${selectedType}`}</button>
             </OverlayTrigger>
         </div>
     );
