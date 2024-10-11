@@ -28,7 +28,7 @@ function NavBar() {
                     <img src="/img/dadok_title_rm.png" alt="Logo" className="logo-img"/>
                 </div>
                 <div className="catch">
-                    <h6>책을 쉽게, 다독다독</h6>
+                    <h6>독서를 쉽게, 다독다독</h6>
                 </div>
                 <div className="header-nav">
                     <ul className="NavMenu">
