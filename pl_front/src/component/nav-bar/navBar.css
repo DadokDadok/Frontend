@@ -46,8 +46,7 @@
 
 .catch {
     display: flex;
-    justify-content: center;
-    text-align: center;
+    flex-basis: 40%;
 
 }
 
@@ -64,6 +63,7 @@
     flex: 1;
     display: flex;
     justify-content: center;
+    margin: 0;
 }
 
 .NavMenu a {

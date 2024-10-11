@@ -39,21 +39,17 @@ function Main() {
 
     useEffect(() => {
         fetchPhotos('book', setBookMap);
-        fetchPhotos('reader', setReader);
-        fetchPhotos('librarian', setLibrarian);
+        fetchPhotos('library', setReader);
     }, []);
 
     function moveMap() {
         navigate('/map');
     }
 
-    function moveReader() {
+    function moveKeyword() {
         navigate('/keyword');
     }
 
-    function moveLibrarian() {
-        navigate('/');
-    }
 
     return (
         <Background>
@@ -100,35 +96,11 @@ function Main() {
                     <Overlay className="overlay">
                         <MainButton
                             variant="outline-light"
-                            onClick={moveReader}>
+                            onClick={moveKeyword}>
                             키워드 기반 도서 추천
                         </MainButton>
                     </Overlay>
                 </MainRow>
-                {/*<MainRow>*/}
-                {/*    <MainCol xs={6} md={6}>*/}
-                {/*        <ImageContainer>*/}
-                {/*            {librarian && <MainImage src={librarian} />}*/}
-                {/*        </ImageContainer>*/}
-                {/*    </MainCol>*/}
-                {/*    <MainCol xs={6} md={6}>*/}
-                {/*        <ImageContainer>*/}
-                {/*            <MainText>*/}
-                {/*                <h4>사서 추천 도서</h4>*/}
-                {/*                <br />*/}
-                {/*                <MainTextP>이번 달 국립중앙도서관 현장 사서들이 추천해드리는</MainTextP>*/}
-                {/*                <MainTextP>도서 목록을 만나보세요!</MainTextP>*/}
-                {/*            </MainText>*/}
-                {/*        </ImageContainer>*/}
-                {/*    </MainCol>*/}
-                {/*    <Overlay className="overlay">*/}
-                {/*        <MainButton*/}
-                {/*            variant="outline-light"*/}
-                {/*            onClick={moveLibrarian}>*/}
-                {/*            사서 추천 도서로 이동*/}
-                {/*        </MainButton>*/}
-                {/*    </Overlay>*/}
-                {/*</MainRow>*/}
             </MainContainer>
             <div style={{paddingBottom: "8rem", backgroundColor: "#FAF7F0"}}>
             </div>
@@ -166,7 +138,7 @@ const ImageContainer = styled.div`
 const MainImage = styled(Image)`
     width: 98%; /* 컬럼 너비에 맞춤 */
     height: auto; /* 비율 유지 */
-    aspect-ratio: 1 / 1; /* 정사각형 비율 */
+    aspect-ratio: 4 / 3; /* 정사각형 비율 */
     object-fit: cover; /* 이미지가 정사각형으로 잘림 */
     border-radius: 15px; /* 둥근 모서리 */
 `;
@@ -174,7 +146,7 @@ const MainImage = styled(Image)`
 const MainText = styled.div`
     width: 98%; /* 컬럼 너비에 맞춤 */
     height: auto; /* 비율 유지 */
-    aspect-ratio: 1 / 1; /* 정사각형 비율 */
+    aspect-ratio: 4 / 3; /* 정사각형 비율 */
     border-radius: 15px; /* 둥근 모서리 */
     background-color: #FAF7F0;
     display: flex; /* flex 컨테이너로 설정 */
