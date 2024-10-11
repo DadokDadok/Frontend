@@ -8,7 +8,7 @@ export default function SearchBar({ value, onChange, onSearch, onKeyPress}) {
     return (
         <TextField
             variant="outlined"
-            placeholder="도서관 또는 서점을 입력하세요"
+            placeholder="도서관 또는 서점을 입력해주세요"
             value={value}
             onChange={onChange}
             onKeyPress={event => {

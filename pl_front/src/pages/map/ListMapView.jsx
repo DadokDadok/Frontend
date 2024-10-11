@@ -5,6 +5,8 @@ import axios from "axios";
 import NaverMapView from "./naver-map/NaverMapView";
 import ListView from "./ListView";
 import "./ListMapView.css";
+import NavBar from "../../component/nav-bar/navBar";
+
 
 export default function ListMapView() {
     const [data, setData] = useState([]);
@@ -88,6 +90,7 @@ export default function ListMapView() {
 
     return (
         <>
+            <NavBar />
             <div className="wrapper">
                 <div className="result-wrap">
                     <ListView
@@ -100,6 +103,8 @@ export default function ListMapView() {
                 </div>
                 <div className="result-map">
                     <NaverMapView data={mapData} myLat={lat} myLng={lng} />
+                </div>
+                <div style={{paddingBottom: "8rem", backgroundColor: "#FAF7F0"}}>
                 </div>
             </div>
         </>

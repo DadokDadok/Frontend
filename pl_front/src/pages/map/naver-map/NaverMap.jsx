@@ -122,7 +122,7 @@ function NaverMap({markers, center, myLat, myLng}) {
 
     return (
         <>
-            <div id="map" style={{width: '100%', height: '85vh'}}/>
+            <div id="map" style={{width: '100%', height: '75vh'}}/>
             {/* 모달 */}
             {showModal && <ModalView show={showModal} handleClose={handleCloseModal} content={selectedCon} myLat={myLat} myLng={myLng}/>}
         </>
