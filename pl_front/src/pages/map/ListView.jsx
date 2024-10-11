@@ -39,7 +39,7 @@ export default function ListView({data, onSelect, onTypeSelect, onLocation, setS
 
     // 페이징 관련 상태
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 5; // 한 페이지당 표시할 항목 수
+    const itemsPerPage = 10; // 한 페이지당 표시할 항목 수
 
     // 검색 로직
     const [searchTermState, setSearchTermState] = useState('');
@@ -169,11 +169,7 @@ export default function ListView({data, onSelect, onTypeSelect, onLocation, setS
                                 shape="rounded"
                             />
                         </div>
-                        <div className="rights">
-                            <p>이 데이터의 저작권은 행정안전부, 주식회사 동네서점에 있습니다.</p>
-                            <p>ⓒ행정안전부 ©동네서점지도 ©bookshopmap.com. All rights reserved.</p>
 
-                        </div>
                     </div>
                 </div>
             )}

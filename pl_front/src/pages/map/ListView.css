@@ -16,7 +16,9 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    background-color: #FAF7F0;
+
 }
 
 .region-dropdown {
@@ -33,6 +35,8 @@
     height: calc(70vh - 80px); /* Pagination을 고려한 높이 조정 */
     overflow-y: auto; /* 스크롤 가능하게 설정 */
     padding-bottom: 60px; /* Pagination 공간 확보 */
+    background-color: #FAF7F0;
+
 }
 
 .list-detail {
@@ -44,7 +48,9 @@
 .location {
     display: flex;
     align-items: center;
-    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    background-color: #FAF7F0;
+
     padding-left: 0.5rem;
 }
 
@@ -82,12 +88,16 @@
 
 .tags{
     display: flex;
+    flex-wrap: wrap;
+    margin-top: 4px;
 }
 
 .tag {
     display: inline-block;
     padding: 0.25em 0.5em;
     margin-right: 0.3rem;
+    margin-top: 0;
+    margin-bottom: 2px;
     font-size: 75%;
     line-height: 1;
     text-align: center;
@@ -159,28 +169,10 @@
 
 
 .pagination {
-    position: absolute; /* 절대 위치로 설정 */
-    bottom: 0rem; /* 아래에서의 위치 조정 */
-    left: 50%; /* 왼쪽 기준으로 */
-    transform: translateX(-50%); /* 가운데 정렬을 위ㄲ해 수평 이동 */
+    margin-top: 10rem;
     display: flex;
     justify-content: center; /* 가로 가운데 정렬 */
-    width: 100%; /* 전체 너비 */
+    align-items: center;
     background-color: #FAF7F0; /* 배경색 설정 (선택 사항) */
-    padding: 10px 0; /* 상하 여백 추가 */
 }
 
-.rights {
-    position: absolute; /* 절대 위치로 설정 */
-    bottom: -3.5rem; /* 아래에서의 위치 조정 */
-    left: 50%; /* 왼쪽 기준으로 */
-    transform: translateX(-50%); /* 가운데 정렬을 위ㄲ해 수평 이동 */
-    justify-content: center; /* 가로 가운데 정렬 */
-    width: 100%; /* 전체 너비 */
-    padding: 10px 0; /* 상하 여백 추가 */
-}
-
-.rights p {
-    margin: 0;
-    font-size: 0.7rem;
-}
