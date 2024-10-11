@@ -32,8 +32,8 @@ function NavBar() {
                 </div>
                 <div className="header-nav">
                     <ul className="NavMenu">
-                        <li><h5 href="map">도서 지도</h5></li>
-                        <li><h5 href="/keyword">이달의 키워드</h5></li>
+                        <li><a href="/map"><h5>도서 지도</h5></a></li>
+                        <li><a href="/keyword"><h5>이달의 키워드</h5></a></li>
                     </ul>
                 </div>
             </div>

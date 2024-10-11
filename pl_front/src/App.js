@@ -4,7 +4,7 @@ import ListMapView from "./pages/map/ListMapView";
 import Main from "./pages/main/Main";
 import NavBar from "./component/nav-bar/navBar";
 import Footer from "./component/footer";
-import KeywordView from "./pages/keyword/KeywordView";
+import KeywordCloud from "./pages/keyword/KeywordCloud";
 
 function App() {
     return (
@@ -13,7 +13,7 @@ function App() {
             <Routes>
                 <Route exact path="/" element={<Main/>}/>
                 <Route exact path="/map" element={<ListMapView/>}/>
-                <Route exact path="/keyword" element={<KeywordView/>}/>
+                <Route exact path="/keyword" element={<KeywordCloud/>}/>
             </Routes>
             <Footer />
         </BrowserRouter>
