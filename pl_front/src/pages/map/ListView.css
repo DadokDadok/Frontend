@@ -1,34 +1,56 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 
-@font-face {
-    font-family: 'GmarketSansMedium';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
+.background {
+    height: 80vh; /* 전체 높이 설정 */
+    position: relative; /* 자식 요소의 절대 위치 설정을 위해 */
 }
 
-@font-face {
-    font-family: 'JalnanGothic';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/JalnanGothic.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
+.search-bar {
+    position: absolute; /* 절대 위치로 설정 */
+    left: 0; /* 좌측에서의 위치 조정 */
+    width: 100%; /* 전체 너비 */
+    z-index: 1000; /* 다른 레이어보다 위에 오도록 설정 */
 }
 
-.background{
-    /*background-color: #f3f4f6;*/
+.explore {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-bottom: 1rem;
+    background-color: #FAF7F0;
+
 }
 
+.region-dropdown {
+    margin-right: 1rem;
+}
+
+.type-dropdown {
+    margin-right: 1rem;
+}
+
+.list-wrap {
+    width: 100%;
+    margin-top: 8rem;
+    height: calc(70vh - 80px); /* Pagination을 고려한 높이 조정 */
+    overflow-y: auto; /* 스크롤 가능하게 설정 */
+    padding-bottom: 60px; /* Pagination 공간 확보 */
+    background-color: #FAF7F0;
+
+}
 
 .list-detail {
     flex: 1;
     padding-top: 1rem;
-    /*background-color: #f3f4f6;*/
+
 }
 
 .location {
     display: flex;
     align-items: center;
-    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    background-color: #FAF7F0;
+
     padding-left: 0.5rem;
 }
 
@@ -46,10 +68,6 @@
     padding-top: 0.3rem;
 }
 
-/*.day-num {*/
-/*    font-family: 'JalnanGothic';*/
-/*    font-width: bold;*/
-/*}*/
 
 .location-info {
     padding-left: 1rem;
@@ -68,13 +86,34 @@
     color: #808080;
 }
 
+.tags{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.tag {
+    display: inline-block;
+    padding: 0.25em 0.5em;
+    margin-right: 0.3rem;
+    margin-top: 0;
+    margin-bottom: 2px;
+    font-size: 75%;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    background-color: #6096B4;
+    color: #ffffff; /* 글씨 색상 변경 */
+}
+
 .location-img-wrap {
     text-align: center;
     padding-left: 1rem;
     display: table;
     width: 5.5rem;
     height: 5.5rem;
-    /*background-color: #f8f8f8;*/
     border-radius: 70%;
 }
 
@@ -127,22 +166,13 @@
     border-radius: 6px;
 }
 
-/*.custom-link {*/
-/*    color: #808080; !* 원하는 색상으로 변경 *!*/
-/*    text-decoration: none; !* 텍스트에 밑줄 제거 *!*/
-/*    font-family: 'GmarketSansMedium';*/
-/*}*/
 
-.badge{
-    display: inline-block;
-    padding: 0.25em 0.5em;
-    font-size: 75%;
-    font-weight: bold;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 0.25rem;
-    background-color: #007bff;
-    color: #fff;
+
+.pagination {
+    margin-top: 10rem;
+    display: flex;
+    justify-content: center; /* 가로 가운데 정렬 */
+    align-items: center;
+    background-color: #FAF7F0; /* 배경색 설정 (선택 사항) */
 }
+

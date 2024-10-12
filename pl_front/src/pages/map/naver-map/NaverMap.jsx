@@ -2,9 +2,11 @@ import React, {useEffect, useState} from 'react';
 import "./NaverMap.css";
 import ModalView from "../ModalView";
 
-function NaverMap({markers, center}) {
+function NaverMap({markers, center, myLat, myLng}) {
     const [showModal, setShowModal] = useState(false); // 모달 열림/닫힘 상태를 관리
     const [selectedCon, setSelectedCon] = useState(null);
+    const [lat, setLat] = useState(0);
+    const [lng, setLng] = useState(0);
 
     useEffect(() => {
         const {naver: naverResult} = window;
@@ -120,9 +122,9 @@ function NaverMap({markers, center}) {
 
     return (
         <>
-            <div id="map" style={{width: '100%', height: '85vh'}}/>
+            <div id="map" style={{width: '100%', height: '75vh'}}/>
             {/* 모달 */}
-            {showModal && <ModalView show={showModal} handleClose={handleCloseModal} content={selectedCon}/>}
+            {showModal && <ModalView show={showModal} handleClose={handleCloseModal} content={selectedCon} myLat={myLat} myLng={myLng}/>}
         </>
     );
 }

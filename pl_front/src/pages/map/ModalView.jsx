@@ -8,19 +8,33 @@ import CancelIcon from '@mui/icons-material/Cancel';
 
 
 function ModalView(
-    {show, handleClose, content}
+    {show, handleClose, content, myLat, myLng}
 ) {
     const img = content.img;
     const name = content.name;
     const address = content.address;
     const homepage = content.homepage;
-    const operatingTime = content.operatingTime;
+    const open = content.open;
     const closed = content.closed;
     const description = content.description;
+    const lat = content.latitude;
+    const lng = content.longitude;
+
+    let route
+    if (myLat == 0 || myLng == 0) {
+        route = `http://map.naver.com/index.nhn?` +
+            `slng=&slat=&stext=&elng=${lng}&elat=${lat}&pathType=0&showMap=true&etext=${name}&showMap=true&menu=route&pathType=1`
+    } else {
+        route = `http://map.naver.com/index.nhn?slng=${myLng}&slat=${myLat}&stext=내위치&elng=${lng}&elat=${lat}&etext=${name}&menu=route&pathType=1`
+    }
 
     // 홈페이지로 이동
     function openDetailPage() {
         window.open(homepage, "_blank");
+    }
+
+    function openFindRoute() {
+        window.open(route, "_blank");
     }
 
     return (
@@ -36,16 +50,6 @@ function ModalView(
                     }}
                 >
                     {name}
-                    {/*<span style={{*/}
-                    {/*    fontSize: '15px',*/}
-                    {/*    fontFamily: "GmarketSansMedium",*/}
-                    {/*    padding: '0.25em 0.5em',*/}
-                    {/*    borderRadius: "8px",*/}
-                    {/*    display: "inline-block",*/}
-                    {/*    verticalAlign: "middle",*/}
-                    {/*    lineHeight: "normal",*/}
-                    {/*    marginLeft: "0.8rem" // title과의 간격 조절*/}
-                    {/*}}>{cat}_{catkr}</span>*/}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body style={{
@@ -83,13 +87,13 @@ function ModalView(
                         {address}
                     </p>
 
-                    {operatingTime && (
+                    {open && (
                         <>
                             <p style={{fontSize: "18px", flexBasis: "30%"}}>
                                 <AccessTimeFilledIcon/> 운영
                             </p>
                             <p style={{fontSize: "18px", flexBasis: "70%"}}>
-                                {operatingTime}
+                                {open}
                             </p>
                         </>
                     )}
@@ -111,10 +115,27 @@ function ModalView(
                     </p>
                 )}
 
-                {homepage && (
-                    <p style={{color: "gray"}}>
-                        더 자세한 정보는?
-                        <button onClick={openDetailPage}
+                <div style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between"}}>
+                    {homepage && (
+                        <p style={{color: "gray", flexBasis: "50%"}}>
+                            더 자세한 정보는?
+                            <button onClick={openDetailPage}
+                                    style={{
+                                        border: "none",
+                                        backgroundColor: "transparent",
+                                        color: "blue",
+                                        // fontFamily: "GmarketSansMedium",
+                                        fontSize: "15px",
+                                        marginTop: "1rem"
+                                    }}>
+                                홈페이지로 이동
+                            </button>
+                        </p>
+
+                    )}
+                    <p style={{color: "gray", flexBasis: "50%"}}>
+                        대중교통 길찾기
+                        <button onClick={openFindRoute}
                                 style={{
                                     border: "none",
                                     backgroundColor: "transparent",
@@ -123,10 +144,10 @@ function ModalView(
                                     fontSize: "15px",
                                     marginTop: "1rem"
                                 }}>
-                            홈페이지로 이동
+                            이동
                         </button>
                     </p>
-                )}
+                </div>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>Close</Button>

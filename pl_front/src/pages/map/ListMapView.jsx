@@ -1,115 +1,111 @@
 import * as React from 'react';
 import "./ListView.css";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import NaverMapView from "./naver-map/NaverMapView";
 import ListView from "./ListView";
-import "./ListMapView.css"
-import Spinner from 'react-bootstrap/Spinner';
-import {useNavigate, useParams} from "react-router-dom";
-import map from "./map.json";
+import "./ListMapView.css";
+import NavBar from "../../component/nav-bar/navBar";
+
 
 export default function ListMapView() {
-    // const [data, setData] = useState([null]);
-    const {data} = map;
+    const [data, setData] = useState([]);
+    const [selectedCityDo, setSelectedCityDo] = useState('서울특별시');
+    const [selectedSiGunGu, setSelectedSiGunGu] = useState('종로구');
+    const [selectedType, setSelectedType] = useState('');
+    const [lat, setLat] = useState(0);
+    const [lng, setLng] = useState(0);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [lastAction, setLastAction] = useState('');
 
-    // 이후 로딩 상태 원복(false -> true)
-    const [loading, setLoading] = useState(false);
-    const [selectedCityDo, setSelectedCityDo] = useState('');
-    const [selectedSiGunGu, setSelectedSiGunGu] = useState('');
-    const navigate = useNavigate();
 
-    const mapData = data.map((item, index) => {
-        let cityDo = item.city_do;
-        let siGunGu = item.si_gun_gu;
+    const fetchData = async () => {
+        let url = '';
+        if(lastAction === ''){
+            url = `/api/books?cityDo=${selectedCityDo}&siGunGu=${selectedSiGunGu}${selectedType ? `&type=${selectedType}` : ''}`;
+        } else if (lastAction === 'location') {
+            url = `/api/books-me?lat=${lat}&lng=${lng}${selectedType ? `&type=${selectedType}` : ''}`;
+        } else if (lastAction === 'search') {
+            url = `/api/search-book?word=${searchTerm}`;
+        } else if (lastAction === 'region') {
+            url = `/api/books?cityDo=${selectedCityDo}&siGunGu=${selectedSiGunGu}${selectedType ? `&type=${selectedType}` : ''}`;
+        }
+
+        if (url) {
+            try {
+                const result = await axios.get(url);
+                setData(result.data);
+            } catch (error) {
+                console.error("데이터 가져오기 오류:", error);
+            }
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, [lastAction, lat, lng, searchTerm, selectedCityDo, selectedSiGunGu, selectedType]);
+
+    const handleSelect = (cityDo, siGunGu) => {
+        setSelectedCityDo(cityDo);
+        setSelectedSiGunGu(siGunGu);
+        setLat(0);
+        setLng(0);
+        setLastAction('region'); // 최근 액션을 지역 선택으로 설정
+    };
+
+    const handleLocation = (lat, lng) => {
+        setLat(lat);
+        setLng(lng);
+        setLastAction('location'); // 최근 액션을 위치로 설정
+    };
+
+    const handleSearch = (term) => {
+        setSearchTerm(term);
+        setLastAction('search'); // 최근 액션을 검색으로 설정
+    };
+
+    const mapData = data && data.length > 0 ? data.map((item, index) => {
+        // item이 null이 아닐 경우에만 접근
+        if (!item) return null; // 혹시라도 item이 null인 경우를 처리
+
         return {
             rowNum: index + 1,
             id: item.id,
             name: item.name,
             type: item.type,
-            cityDo: cityDo,
-            siGunGu: siGunGu,
             address: item.address,
             tel: item.tel,
             latitude: item.latitude,
             longitude: item.longitude,
             homepage: item.homepage,
             closed: item.closed,
-            operatingTime: item.operatingTime,
+            open: item.open,
             description: item.description,
             img: item.img,
             tag: item.tag,
         };
-    });
+    }).filter(item => item !== null) : []; // null을 제거한 새로운 배열 반환
 
-    const handleSelect = (cityDo, siGunGu) => {
-        setSelectedCityDo(cityDo);
-        setSelectedSiGunGu(siGunGu);
-    };
-
-    useEffect(() => {
-        console.log(selectedCityDo, '/', selectedSiGunGu);
-        // 여기서 axios 요청 보내야함
-
-    }, [selectedCityDo, selectedSiGunGu]);
-
-    // useEffect(() => {
-    //     async function fetchData() {
-    //         try {
-    //             const result = await axios.get(`/courseId/${nickname}/${courseNo}`);
-    //             const newData = result.data;
-    //             setData(newData);
-    //             // 데이터를 가져온 후에 공유 비밀번호 설정
-    //             Object.values(newData).forEach(item => {
-    //                 setSharePw(item[0].sharePw);
-    //             });
-    //         } catch (error) {
-    //             console.error("Error fetching data:", error);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     }
-    //
-    //     fetchData();
-    //
-    //     return () => {
-    //         setData([]);
-    //         setSharePw('');
-    //     };
-    //
-    // }, []);
-
-
-    // Axios 요청 보내기
-    // axios.post('/your-api-endpoint', {
-    //     cityDo: cityDo,
-    //     siGunGu: siGunGu
-    // })
-    //     .then(response => {
-    //         console.log('Success:', response.data);
-    //     })
-    //     .catch(error => {
-    //         console.error('Error:', error);
-    //     });
 
 
     return (
         <>
+            <NavBar />
             <div className="wrapper">
-                {loading ? (
-                    <div className="loading-wrap">
-                        <div className="loading">
-                            <Spinner animation="border" style={{width: '3rem', height: '3rem'}}/>
-                        </div>
-                        <br/>
-                        <h2>Loading...</h2>
-                    </div>
-                ) : (
-                    <>
-                        <div className="result-wrap"><ListView data={mapData} onSelect={handleSelect}/></div>
-                        <div className="result-map"><NaverMapView data={mapData}/></div>
-                    </>
-                )}
+                <div className="result-wrap">
+                    <ListView
+                        data={mapData}
+                        onSelect={handleSelect}
+                        onTypeSelect={setSelectedType}
+                        onLocation={handleLocation}
+                        setSearchTerm={(setSearchTerm) => handleSearch(setSearchTerm)}
+                    />
+                </div>
+                <div className="result-map">
+                    <NaverMapView data={mapData} myLat={lat} myLng={lng} />
+                </div>
+                <div style={{paddingBottom: "8rem", backgroundColor: "#FAF7F0"}}>
+                </div>
             </div>
         </>
     );
