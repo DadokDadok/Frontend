@@ -32,11 +32,16 @@
 .list-wrap {
     width: 100%;
     margin-top: 8rem;
-    height: calc(70vh - 80px); /* Pagination을 고려한 높이 조정 */
-    overflow-y: auto; /* 스크롤 가능하게 설정 */
-    padding-bottom: 60px; /* Pagination 공간 확보 */
+    height: calc(70vh - 80px);
+    overflow-y: auto;
+    padding-bottom: 60px;
     background-color: #FAF7F0;
+    pointer-events: none; /* 클릭 이벤트 비활성화 */
+}
 
+.list-wrap > * {
+    pointer-events: auto; /* 자식 요소에 대해 클릭 이벤트 활성화 */
+    cursor: default; /* 기본 커서로 설정 */
 }
 
 .list-detail {
@@ -115,6 +120,8 @@
     width: 5.5rem;
     height: 5.5rem;
     border-radius: 70%;
+    cursor: pointer; /* 커서를 포인터로 설정 */
+    pointer-events: auto; /* 포인터 이벤트 활성화 */
 }
 
 .location-img-div {
