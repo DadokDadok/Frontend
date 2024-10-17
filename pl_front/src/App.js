@@ -5,10 +5,24 @@ import Main from "./pages/main/Main";
 import NavBar from "./component/nav-bar/navBar";
 import Footer from "./component/footer";
 import KeywordCloud from "./pages/keyword/KeywordCloud";
+import { createGlobalStyle } from 'styled-components';
+
+const GlobalStyle = createGlobalStyle`
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #FAF7F0;
+        height: 100vh;
+        overflow: auto;
+        color: #335061;
+        
+    }
+`;
 
 function App() {
     return (
         <BrowserRouter>
+            <GlobalStyle />
             <NavBar/>
             <Routes>
                 <Route exact path="/" element={<Main/>}/>
