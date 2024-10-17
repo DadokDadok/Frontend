@@ -21,7 +21,6 @@
     left: 0;
     background-color: #FAF7F0;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-
 }
 
 .header-logo {
@@ -39,24 +38,21 @@
     display: flex;
     align-items: center;
     flex: 1;
-    flex-basis: 10%;
     justify-content: flex-end;
-
 }
 
 .catch {
     display: flex;
     flex-basis: 40%;
-
 }
 
 .NavMenu {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     list-style-type: none;
-    padding: 0;
     margin: 0;
-    width: 40%;
+    width: 60%;
 }
 
 .NavMenu li {
@@ -64,6 +60,7 @@
     display: flex;
     justify-content: center;
     margin: 0;
+    min-width: 4rem;
 }
 
 .NavMenu a {
@@ -71,6 +68,7 @@
     color: #333;
     cursor: pointer;
     font-size: 20px;
+    padding: 0.5rem 1rem; /* 클릭 영역 확대 */
 }
 
 .NavMenu a:hover {

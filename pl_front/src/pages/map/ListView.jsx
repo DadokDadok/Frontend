@@ -1,184 +1,397 @@
-import * as React from 'react';
-import "./ListView.css";
-import {useEffect, useState} from "react";
-import ModalView from "./ModalView.jsx";
-import RegionDropdown from "../../component/RegionDropdown";
-import TypeDropdown from "../../component/typeDropDown";
-import useGeoLocation from "../../component/useGeoLocation";
-import Pagination from '@mui/material/Pagination';
-import GpsFixedIcon from '@mui/icons-material/GpsFixed';
-import SearchBar from "../../component/SearchBar";
-import {Dialog, DialogActions, DialogContent, DialogTitle, Button} from '@mui/material';
-import Badge from 'react-bootstrap/Badge';
+import React, { useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+import * as d3 from 'd3';
+import cloud from 'd3-cloud';
+import Accordion from 'react-bootstrap/Accordion';
+import Modal from 'react-bootstrap/Modal';
+import axios from "axios";
 
-const LocationRequestDialog = ({open, onClose, onConfirm}) => (
-    <Dialog open={open} onClose={onClose}>
-        <DialogTitle>위치 정보 요청</DialogTitle>
-        <DialogContent>
-            <p>현재 위치를 사용하시겠습니까?</p>
-        </DialogContent>
-        <DialogActions>
-            <Button onClick={onClose} color="primary">아니요</Button>
-            <Button onClick={onConfirm} color="primary">예</Button>
-        </DialogActions>
-    </Dialog>
-);
-
-export default function ListView({data, onSelect, onTypeSelect, onLocation, setSearchTerm}) {
-    const [noResult, setNoResult] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-    const [selectedCon, setSelectedCon] = useState('');
-    const location = useGeoLocation();
-    const [lat, setLat] = useState(0);
-    const [lng, setLng] = useState(0);
-    const [showLocationDialog, setShowLocationDialog] = useState(false);
-
-    // 선택된 도시와 지역 상태
-    const [selectedCityDo, setSelectedCityDo] = useState('');
-    const [selectedSiGunGu, setSelectedSiGunGu] = useState('');
-
-    // 페이징 관련 상태
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10; // 한 페이지당 표시할 항목 수
-
-    // 검색 로직
-    const [searchTermState, setSearchTermState] = useState('');
+const KeywordCloud = () => {
+    const svgRef = useRef();
+    const [activeKey, setActiveKey] = useState("0");
+    const [keyword, setKeyword] = useState(null);
+    const [allBooks, setAllBooks] = useState([]);
+    const [visibleBooks, setVisibleBooks] = useState([]);
+    const [modalShow, setModalShow] = useState(false);
+    const [selectedBook, setSelectedBook] = useState(null);
+    const [itemsToShow, setItemsToShow] = useState(10);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
     useEffect(() => {
-        setNoResult(data.length === 0);
-    }, [data]);
+        const fetchKeywords = async () => {
+            try {
+                const response = await axios.get(`http://data4library.kr/api/monthlyKeywords?authKey=${process.env.REACT_APP_LIBRARY_CLIENT_KEY}&format=json&month=${year + "-" + month}`);
+                const words = response.data.response.keywords.map(({ keyword }) => ({
+                    text: keyword.word,
+                    size: Math.sqrt(keyword.weight) * 7
+                }));
 
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [onSelect]);
+                const layout = cloud()
+                    .size([1200, 400])
+                    .words(words)
+                    .padding(5)
+                    .rotate(() => (Math.random() > 0.5 ? 90 : 0))
+                    .fontSize(d => d.size)
+                    .font("sans-serif")
+                    .on("end", draw);
 
-    const handleSearchChange = (event) => {
-        setSearchTermState(event.target.value);
-    };
+                layout.start();
 
-    const executeSearch = () => {
-        setSearchTerm(searchTermState);
-        setCurrentPage(1);
-    };
+                function draw(words) {
+                    d3.select(svgRef.current).selectAll("*").remove();
+                    const g = d3.select(svgRef.current)
+                        .append("g")
+                        .attr("transform", "translate(600, 200)");
 
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
-            executeSearch();
+                    g.selectAll("text")
+                        .data(words)
+                        .enter().append("text")
+                        .style("font-size", d => `${d.size}px`)
+                        .style("fill", (d, i) => d3.schemeCategory10[i % 10])
+                        .attr("text-anchor", "middle")
+                        .attr("transform", d => `translate(${d.x}, ${d.y}) rotate(${d.rotate})`)
+                        .text(d => d.text)
+                        .on("mousedown", (event, d) => {
+                            event.preventDefault();
+                            handleKeywordClick(d.text);
+                        })
+                        .style("cursor", "default");
+                }
+            } catch (error) {
+                console.error("Error fetching keywords", error);
+            }
+        };
+
+        fetchKeywords();
+    }, []);
+
+    const handleKeywordClick = async (keyword) => {
+        setKeyword(keyword);
+        setActiveKey("1");
+        setIsLoading(true);
+        setItemsToShow(10);
+        setVisibleBooks([]);
+
+        try {
+            const allBooks = [];
+            const maxResults = 40;
+            const totalRequests = 8;
+
+            const requests = Array.from({ length: totalRequests }, (_, i) => {
+                const startIndex = i * maxResults;
+                return axios.get(`https://www.googleapis.com/books/v1/volumes?key=${process.env.REACT_APP_GOOGLE_BOOKS_CLIENT_KEY}&hl=ko&startIndex=${startIndex}&maxResults=${maxResults}&orderBy=relevance&q=${keyword}`);
+            });
+
+            const responses = await Promise.all(requests);
+
+            responses.forEach(response => {
+                if (response.data.items) {
+                    allBooks.push(...response.data.items);
+                }
+            });
+
+            const filteredBooks = allBooks.filter(item =>
+                item.saleInfo.saleability !== "NOT_FOR_SALE" &&
+                item.accessInfo.epub.isAvailable === true &&
+                item.accessInfo.pdf.isAvailable === true &&
+                item.volumeInfo.maturityRating === "NOT_MATURE"
+            );
+
+            const formattedBooks = filteredBooks.map(item => {
+                const info = item.volumeInfo;
+                return {
+                    bookname: info.title || "정보 없음",
+                    authors: info.authors ? info.authors.join(", ") : "저자 정보 없음",
+                    publisher: info.publisher || "출판사 정보 없음",
+                    publication_year: info.publishedDate || "발행년도 정보 없음",
+                    isbn13: (info.industryIdentifiers && info.industryIdentifiers.find(id => id.type === "ISBN_13")?.identifier) || "ISBN 정보 없음",
+                    vol: info.pageCount || "권 정보 없음",
+                    bookImageURL: info.imageLinks?.thumbnail || "",
+                    description: info.description || "설명 없음",
+                    bookDtlUrl: info.previewLink || "#",
+                    infoLink: info.infoLink || "#",
+                };
+            });
+
+            setAllBooks(formattedBooks);
+            setVisibleBooks(formattedBooks.slice(0, itemsToShow));
+
+        } catch (error) {
+            console.error("Error fetching books", error);
+            setAllBooks([]);
+            setVisibleBooks([]);
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    const handleShowModal = (id) => {
-        const item = data.find(item => item.id === id);
-        setSelectedCon(item);
-        setShowModal(true);
+    const handleLoadMore = () => {
+        const newItemsToShow = itemsToShow + 10;
+        setItemsToShow(newItemsToShow);
+        setVisibleBooks(allBooks.slice(0, newItemsToShow));
     };
 
-    const handleCloseModal = () => setShowModal(false);
-
-    const handleGetLocation = () => {
-        setShowLocationDialog(true);
+    const handleImageClick = (book) => {
+        setSelectedBook(book);
+        setIsDescriptionExpanded(false);
+        setModalShow(true);
     };
 
-    const handleConfirmLocation = () => {
-        setShowLocationDialog(false);
-        if (location.loaded && !location.error) {
-            const {lat, lng} = location.coordinates;
-            onLocation(lat, lng);
-            setCurrentPage(1);
-        }
+    const handleCloseModal = () => {
+        setModalShow(false);
+        setSelectedBook(null);
+        setIsDescriptionExpanded(false);
     };
 
+    const getLastMonth = () => {
+        const today = new Date();
+        const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1);
+        const year = lastMonth.getFullYear();
+        const month = String(lastMonth.getMonth() + 1).padStart(2, '0');
+        return { year, month };
+    };
 
-    // 페이징 로직
-    const totalPages = Math.ceil(data.length / itemsPerPage);
-    const currentItems = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const { year, month } = getLastMonth();
 
     return (
-        <div className="background">
-            <div className="search-bar">
-                <div className="explore">
-                    <div className="region-dropdown">
-                        <RegionDropdown onSelect={onSelect} />
-                    </div>
-                    <div className="type-dropdown">
-                        <TypeDropdown onTypeSelect={onTypeSelect}/>
-                    </div>
-                    <button onClick={handleGetLocation} className="btn btn-info"
-                            style={{backgroundColor: '#335061', color: '#ffffff'}}>
-                        <GpsFixedIcon/> 내 위치
-                    </button>
-                </div>
-                <SearchBar
-                    value={searchTermState}
-                    onChange={handleSearchChange}
-                    onSearch={executeSearch}
-                    onKeyPress={handleKeyPress}
-                />
-            </div>
-
-
-            {noResult ? (
-                <div className="list-wrap">결과가 없습니다.</div>
-            ) : (
-                <div className="list-wrap">
-                    {currentItems.map(item => (
-                        <div key={item.id}>
-                            <hr/>
-                            <div className="list-detail">
-                                <div className="location-wrap">
-                                    <div className="location">
-                                        <div
-                                            className={`location-num-wrap ${item.type === "도서관" ? 'color-first' : item.type === "문화공간" ? 'color-second' : 'color-third'}`}>
-                                            <p className="location-num">{item.rowNum}</p>
+        <Background>
+            <TypographyTitle>
+                이 달의 키워드
+            </TypographyTitle>
+            <TypographyContainer>
+                <svg ref={svgRef} width="80rem" height="400px"></svg>
+            </TypographyContainer>
+            <BookAccordion activeKey={activeKey}>
+                <BookAccordionItem eventKey="1">
+                    <BookAccordionHeader onClick={() => setActiveKey("1")}>
+                        {(keyword && "선택된 키워드: " + keyword) || "키워드를 클릭해주세요"}
+                    </BookAccordionHeader>
+                    <BookAccordionBody>
+                        {isLoading ? (
+                            <p>{keyword}와(과) 관련된 도서를 가져오는 중입니다...</p>
+                        ) : visibleBooks.length > 0 ? (
+                            <ImageGrid>
+                                {visibleBooks.map((book, index) => (
+                                    <ImageContainer key={index} onClick={() => handleImageClick(book)}>
+                                        <div style={{ position: 'relative', display: 'inline-block' }}>
+                                            {book.bookImageURL ? (
+                                                <Image src={book.bookImageURL} alt={book.bookname} />
+                                            ) : (
+                                                <>
+                                                    <Image src="/img/book_img.png" />
+                                                    <BookTitle>{book.bookname}</BookTitle>
+                                                    <BookAuthor>{book.authors}</BookAuthor>
+                                                </>
+                                            )}
                                         </div>
-                                        <div className="location-img-wrap" onClick={() => handleShowModal(item.id)}>
-                                            <div className="location-img-div">
-                                                <img
-                                                    src={item.img ? item.img : '/img/dadok_logo.png'}
-                                                    className="location-img"
-                                                    alt={item.name}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="location-info" onClick={() => handleShowModal(item.id)}>
-                                            <p className="title">{item.name}</p>
-                                            <p className="addr">{item.address}</p>
-                                            <div className="tags">
-                                                {item.tag.split('#').map((tag, index) => (
-                                                    tag.trim() && <p key={index} className="tag">#{tag.trim()}</p>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                    {showModal && (
-                        <ModalView show={showModal} handleClose={handleCloseModal} content={selectedCon} myLat={lat}
-                                   myLng={lng}/>
+                                        <Overlay>
+                                            <OverlayP>{book.bookname}</OverlayP>
+                                        </Overlay>
+                                    </ImageContainer>
+                                ))}
+                            </ImageGrid>
+                        ) : (
+                            <p>책 정보가 없습니다.</p>
+                        )}
+                        {visibleBooks.length < allBooks.length && !isLoading && (
+                            <KeywordButton onClick={handleLoadMore}>10개 더 보기</KeywordButton>
+                        )}
+                    </BookAccordionBody>
+                </BookAccordionItem>
+            </BookAccordion>
+            <Modal show={modalShow} onHide={handleCloseModal} size="lg">
+                <Modal.Header closeButton>
+                    <Modal.Title>{selectedBook?.bookname}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <ModalContent>
+                        <BookImageContainer>
+                            <img src={selectedBook?.bookImageURL || "/img/book_img.png"} alt={selectedBook?.bookname} />
+                        </BookImageContainer>
+                        <BookDetails>
+                            <DetailRow>
+                                <DetailLabel>저자</DetailLabel>
+                                <DetailValue>{selectedBook?.authors}</DetailValue>
+                            </DetailRow>
+                            <DetailRow>
+                                <DetailLabel>출판사</DetailLabel>
+                                <DetailValue>{selectedBook?.publisher}</DetailValue>
+                            </DetailRow>
+                            <DetailRow>
+                                <DetailLabel>발행년도</DetailLabel>
+                                <DetailValue>{selectedBook?.publication_year}</DetailValue>
+                            </DetailRow>
+                            <DetailRow>
+                                <DetailLabel>ISBN</DetailLabel>
+                                <DetailValue>{selectedBook?.isbn13}</DetailValue>
+                            </DetailRow>
+                        </BookDetails>
+                    </ModalContent>
+                    <hr />
+                    {selectedBook?.description.length > 100 && (
+                        <KeywordButton onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}>
+                            {isDescriptionExpanded ? "접기" : "더보기"}
+                        </KeywordButton>
                     )}
-
-                    <div>
-                        <div className="pagination">
-                            <Pagination
-                                count={totalPages}
-                                page={currentPage}
-                                onChange={(event, value) => setCurrentPage(value)}
-                                variant="outlined"
-                                shape="rounded"
-                            />
-                        </div>
-
+                    <p style={{ display: isDescriptionExpanded ? "block" : "none" }}>
+                        {selectedBook?.description}
+                    </p>
+                    <hr />
+                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                        <KeywordButton as="a" href={selectedBook?.infoLink} target="_blank">자세히 보기</KeywordButton>
+                        <KeywordButton as="a" href={selectedBook?.bookDtlUrl} target="_blank">도서 미리보기</KeywordButton>
                     </div>
-                </div>
-            )}
-
-            <LocationRequestDialog
-                open={showLocationDialog}
-                onClose={() => setShowLocationDialog(false)}
-                onConfirm={handleConfirmLocation}
-            />
-        </div>
+                </Modal.Body>
+            </Modal>
+        </Background>
     );
-}
+};
+
+export default KeywordCloud;
+
+const TypographyContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    padding-bottom: 5rem;
+    background-color: #FAF7F0;
+`;
+
+const TypographyTitle = styled.h1`
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+    display: flex;
+    justify-content: center;
+`;
+
+const Background = styled.div`
+    background-color: #FAF7F0;
+    padding-top: 80px;
+`;
+
+const BookTitle = styled.div`
+    position: absolute;
+    top: 60px;
+    left: 20px;
+    width: 100px;
+    font-size: 15px;
+`;
+
+const BookAuthor = styled.div`
+    position: absolute;
+    bottom: 25px;
+    left: 20px;
+    width: 100px;
+    font-size: 12px;
+`;
+
+const ImageGrid = styled.div`
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+`;
+
+const ImageContainer = styled.div`
+    position: relative;
+    display: flex;
+    justify-content: center;
+`;
+
+const Image = styled.img`
+    width: 8rem;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    transition: transform 0.2s;
+`;
+
+const BookAccordion = styled(Accordion)`
+    background-color: #FAF7F0;
+`;
+
+const BookAccordionItem = styled(Accordion.Item)`
+    background-color: #FAF7F0;
+`;
+
+const BookAccordionHeader = styled(Accordion.Header)`
+    background-color: #FAF7F0;
+`;
+
+const BookAccordionBody = styled(Accordion.Body)`
+    background-color: #FAF7F0;
+    padding-bottom: 10rem;
+`;
+
+const Overlay = styled.div`
+    width: 8rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+
+    ${ImageContainer}:hover & {
+        opacity: 1;
+    }
+`;
+
+const OverlayP = styled.p`
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin: 15px;
+`;
+
+const KeywordButton = styled.button`
+    margin: 20px auto;
+    display: block;
+    padding: 10px 20px;
+    background-color: #335061;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #335061;
+    }
+`;
+
+const ModalContent = styled.div`
+    display: flex;
+    justify-content: space-between;
+`;
+
+const BookImageContainer = styled.div`
+    flex-basis: 30%;
+    margin-left: 2rem;
+`;
+
+const BookDetails = styled.div`
+    flex-basis: 65%;
+    display: flex;
+    flex-direction: column;
+`;
+
+const DetailRow = styled.div`
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+`;
+
+const DetailLabel = styled.p`
+    font-size: 18px;
+    width: 25%;
+`;
+
+const DetailValue = styled.p`
+    font-size: 18px;
+    width: 65%;
+`;
