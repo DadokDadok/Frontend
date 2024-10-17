@@ -81,11 +81,17 @@ export default function ListView({data, onSelect, onTypeSelect, onLocation, setS
 
     const handleConfirmLocation = () => {
         setShowLocationDialog(false);
-        if (location.loaded && !location.error) {
-            const {lat, lng} = location.coordinates;
-            onLocation(lat, lng);
-            setCurrentPage(1);
-        }
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                onLocation(latitude, longitude);
+                setCurrentPage(1);
+            },
+            (error) => {
+                console.error("Error obtaining location:", error);
+                // 에러 처리 로직 추가 가능
+            }
+        );
     };
 
 
