@@ -23,7 +23,7 @@ const KeywordCloud = () => {
         const fetchKeywords = async () => {
             const { year, month } = getLastMonth();
             try {
-                const response = await axios.get(`http://data4library.kr/api/monthlyKeywords?authKey=${process.env.REACT_APP_LIBRARY_CLIENT_KEY}&format=json&month=${year}-${month}`);
+                const response = await axios.get(`https://data4library.kr/api/monthlyKeywords?authKey=${process.env.REACT_APP_LIBRARY_CLIENT_KEY}&format=json&month=${year}-${month}`);
 
                 const words = response.data.response.keywords.map(({ keyword }) => ({
                     text: keyword.word,
