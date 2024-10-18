@@ -26,7 +26,10 @@
 .header-logo {
     cursor: pointer;
     padding-left: 1rem;
-    flex-basis: 10%;
+    flex-basis: 40%;
+    display: flex;
+    align-items: center;
+
 }
 
 .header-logo .logo-img {
@@ -37,13 +40,17 @@
 .header-nav {
     display: flex;
     align-items: center;
-    flex: 1;
+    flex-basis: 60%;
     justify-content: flex-end;
 }
 
 .catch {
     display: flex;
-    flex-basis: 40%;
+}
+
+.catch a {
+    text-decoration: none;
+    color: #335061;
 }
 
 .NavMenu {
@@ -60,7 +67,7 @@
     display: flex;
     justify-content: center;
     margin: 0;
-    min-width: 4rem;
+    min-width: 2rem;
 }
 
 .NavMenu a {
