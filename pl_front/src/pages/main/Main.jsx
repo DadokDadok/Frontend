@@ -13,7 +13,7 @@ import NavBar from "../../component/nav-bar/navBar";
 function Main() {
     const [bookMap, setBookMap] = useState(''); // 지도
     const [reader, setReader] = useState(''); // 다독자
-    const [librarian, setLibrarian] = useState(''); // 사서 추천
+    const [trend, setTrend] = useState(''); // 사서 추천
 
     const navigate = useNavigate();
 
@@ -40,6 +40,7 @@ function Main() {
     useEffect(() => {
         fetchPhotos('book', setBookMap);
         fetchPhotos('library', setReader);
+        fetchPhotos('trend', setTrend);
     }, []);
 
     function moveMap() {
@@ -48,6 +49,10 @@ function Main() {
 
     function moveKeyword() {
         navigate('/keyword');
+    }
+
+    function moveTrend() {
+        navigate('/trend');
     }
 
 
@@ -74,6 +79,30 @@ function Main() {
                             variant="outline-light"
                             onClick={moveMap}>
                             도서 지도로 이동
+                        </MainButton>
+                    </Overlay>
+                </MainRow>
+                <MainRow>
+                    <MainCol xs={6} md={6}>
+                        <ImageContainer>
+                            <MainText>
+                                <h4>트렌드 기반 도서 추천</h4>
+                                <br />
+                                <MainTextP>구글 사용자들의 검색을 취합하여 분석된</MainTextP>
+                                <MainTextP>트렌드를 바탕으로 도서를 추천해드립니다!</MainTextP>
+                            </MainText>
+                        </ImageContainer>
+                    </MainCol>
+                    <MainCol xs={6} md={6}>
+                        <ImageContainer>
+                            {trend && <MainImage src={trend} />}
+                        </ImageContainer>
+                    </MainCol>
+                    <Overlay className="overlay">
+                        <MainButton
+                            variant="outline-light"
+                            onClick={moveTrend}>
+                            트렌드 기반 도서 추천
                         </MainButton>
                     </Overlay>
                 </MainRow>

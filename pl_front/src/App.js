@@ -6,6 +6,7 @@ import NavBar from "./component/nav-bar/navBar";
 import Footer from "./component/footer";
 import KeywordCloud from "./pages/keyword/KeywordCloud";
 import { createGlobalStyle } from 'styled-components';
+import TrendChart from "./pages/trend/TrendChart";
 
 const GlobalStyle = createGlobalStyle`
     body {
@@ -28,6 +29,7 @@ function App() {
                 <Route exact path="/" element={<Main/>}/>
                 <Route exact path="/map" element={<ListMapView/>}/>
                 <Route exact path="/keyword" element={<KeywordCloud/>}/>
+                <Route exact path="/trend" element={<TrendChart/>}/>
             </Routes>
             <Footer />
         </BrowserRouter>

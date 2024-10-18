@@ -26,13 +26,15 @@ function NavBar() {
             <div className="app-header">
                 <div className="header-logo" onClick={() => navigate('/')}>
                     <img src="/img/dadok_title_rm.png" alt="Logo" className="logo-img"/>
+                    <div className="catch">
+                        <h6>독서를 더 쉽게, 다독다독</h6>
+                    </div>
                 </div>
-                <div className="catch">
-                    <h6>독서를 쉽게, 다독다독</h6>
-                </div>
+
                 <div className="header-nav">
                     <ul className="NavMenu">
                         <li><a href="/map"><h5>도서 지도</h5></a></li>
+                        <li><a href="/trend"><h5>오늘의 키워드</h5></a></li>
                         <li><a href="/keyword"><h5>이달의 키워드</h5></a></li>
                     </ul>
                 </div>

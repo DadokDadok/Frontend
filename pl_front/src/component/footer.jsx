@@ -23,7 +23,7 @@ const Rights = styled.div`
     width: 100%; /* 전체 너비 */
     height: 7rem;
     padding: 10px 0; /* 상하 여백 추가 */
-    background-color: #FAF7F0; /* 배경 색상 추가 (선택 사항) */
+    background-color: #EEE9D4; /* 배경 색상 추가 (선택 사항) */
     z-index: 100;
 `;
 
