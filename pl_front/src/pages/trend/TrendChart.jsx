@@ -143,7 +143,7 @@ const TrendChart = () => {
                                 <TooltipWrapper
                                     style={{
                                         left: 15,
-                                        top: tooltipPosition.y - barHeight / 1.2,
+                                        top: tooltipPosition.y - barHeight / 1.05,
                                     }}
                                 >
                                     {tooltipData.name}: {formatNumber(tooltipData.value)}
@@ -267,7 +267,7 @@ const TooltipWrapper = styled.div`
     border-radius: 5px;
     z-index: 200;
     width: auto;
-    max-width: 120px;
+    max-width: 15rem;
     white-space: nowrap;
     pointer-events: none;
     transition: left 0.2s ease, top 0.2s ease;
